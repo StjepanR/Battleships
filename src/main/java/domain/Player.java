@@ -58,6 +58,14 @@ public class Player {
 		this.name = name;
 	}
 
+	public Long getIdPLayer() {
+		return idPLayer;
+	}
+
+	public void setIdPLayer(Long idPLayer) {
+		this.idPLayer = idPLayer;
+	}
+
 	public String getEmail() {
 		return email;
 	}

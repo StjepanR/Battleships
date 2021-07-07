@@ -2,9 +2,11 @@ package service;
 
 import java.util.List;
 
-import domain.Game;
-import domain.Player;
+import org.springframework.stereotype.Service;
 
+import domain.Game;
+
+@Service
 public interface GameService {
 
 	List<Game> listAll();

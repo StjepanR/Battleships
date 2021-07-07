@@ -1,14 +1,22 @@
 package rest;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import domain.Player;
+import domain.ResponseBody;
 import service.PlayerService;
 
 @RestController
@@ -18,6 +26,40 @@ public class PlayerController {
 	@Autowired
 	private PlayerService playerService;
 
+	@PostMapping("")
+	public ResponseEntity<?> addPlayer(@RequestBody Player player) {
+		
+		Player newPlayer = playerService.createPlayer(player);
+		/*
+		 * createPlayer returns player hence if player is null means he is not created
+		 * */
+		if (newPlayer == null) {
+			
+			ResponseBody responseBody = new ResponseBody();
+			responseBody.setErrorArg("error.username-already-taken");
+			responseBody.setErrorCode(player.getEmail());
+			
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		
+		Map<String, String> responseHeader = new HashMap<>();
+		responseHeader.put("Location", "/player/" + newPlayer.getIdPLayer());
+		
+		return new ResponseEntity<>(responseHeader, HttpStatus.CREATED);
+		
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getMyProfile(@PathVariable("id") Long id) {
+		Player player = playerService.findByIdPLayer(id);
+		
+		if (player == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(player, HttpStatus.OK);
+	}
+	
 	@GetMapping("/list")
 	public ResponseEntity<?> getPlayers() {
 		return new ResponseEntity<>(playerService.listAll(), HttpStatus.OK);
@@ -25,6 +67,12 @@ public class PlayerController {
 	
 	@PostMapping("/{id}/game")
 	public ResponseEntity<?> getOpponent(@PathVariable("id") Long id) {
-		return new ResponseEntity<>(playerService.findByIdPLayer(id), HttpStatus.OK);
+		
+		if (playerService.findByIdPLayer(id) == null) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT); 
+		}
+		
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
