@@ -7,8 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BattleshipsApplication {
 
 	public static void main(String[] args) {
-		//SpringApplication.run(BattleshipsApplication.class, args);
-		System.out.println("Hello world!");
+		SpringApplication.run(BattleshipsApplication.class, args);
 	}
 
 }
