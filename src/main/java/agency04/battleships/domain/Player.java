@@ -2,6 +2,7 @@ package agency04.battleships.domain;
 
 import java.util.Set;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,8 +14,13 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 @Entity
+@Getter @Setter @NoArgsConstructor
 public class Player {
 
 	/*
@@ -61,40 +67,5 @@ public class Player {
 	@OneToMany(mappedBy = "player2")
 	@JsonIgnore
 	private Set<Game> games2;
-	
-	public Player(String idPLayer, @NotNull String email, @NotNull String name, Set<Game> games1, Set<Game> games2) {
-		super();
-		this.idPLayer = idPLayer;
-		this.email = email;
-		this.name = name;
-		this.games1 = games1;
-		this.games2 = games2;
-	}
-
-	public Player() {}
-	
-	public String getIdPLayer() {
-		return idPLayer;
-	}
-
-	public void setIdPLayer(String idPLayer) {
-		this.idPLayer = idPLayer;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Set<Game> getGames1() {
-		return games1;
-	}
-
-	public Set<Game> getGames2() {
-		return games2;
-	}
 
 }

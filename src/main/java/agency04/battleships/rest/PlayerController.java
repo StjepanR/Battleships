@@ -78,13 +78,19 @@ public class PlayerController {
 	}
 	
 	@PostMapping("/{id}/game")
-	public ResponseEntity<?> getOpponent(@PathVariable("id") String id) {
+	public ResponseEntity<?> getOpponent(@RequestBody String idPlayer, @PathVariable("id") String id) {
 		
 		if (playerService.findByIdPLayer(id) == null) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT); 
+			
+			ResponseBody responseBody = new ResponseBody();
+			responseBody.setErrorArg(idPlayer);
+			responseBody.setErrorCode("error.unknown-user-id");
+			
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
 		
-		
-		return new ResponseEntity<>(HttpStatus.OK);
+		Map<String, String> responseHeader = new HashMap<>();
+		responseHeader.put("Location", "/game/");
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 }

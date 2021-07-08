@@ -1,5 +1,6 @@
 package agency04.battleships.domain;
 
+
 import javax.persistence.Entity;
 
 import javax.persistence.GeneratedValue;
@@ -8,15 +9,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import agency04.battleships.domain.enums.Status;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
+@Getter @Setter @NoArgsConstructor
 public class Game {
 
 	@Id
-	@GeneratedValue
-	private Long idGame;
+	@JsonIgnore
+	@GeneratedValue(generator = "prod-generator")
+	@GenericGenerator(name = "prod-generator", parameters = @Parameter(name = "prefix", value = "game"), strategy = "agency04.battleships.domain.generator.MyKeyGenerator")
+	private String idGame;
 	
 	@ManyToOne
     @JoinColumn(name = "idPlayer", nullable = false, insertable = false, updatable = false)
@@ -28,37 +40,4 @@ public class Game {
 	
 	@NotNull
 	private Status status;
-
-	public Long getIdGame() {
-		return idGame;
-	}
-
-	public Player getPlayer1() {
-		return player1;
-	}
-
-	public Player getPlayer2() {
-		return player2;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setIdGame(Long idGame) {
-		this.idGame = idGame;
-	}
-
-	public void setPlayer1(Player player1) {
-		this.player1 = player1;
-	}
-
-	public void setPlayer2(Player player2) {
-		this.player2 = player2;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-	
 }

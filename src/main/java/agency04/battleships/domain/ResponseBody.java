@@ -2,6 +2,11 @@ package agency04.battleships.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter @Setter @NoArgsConstructor
 public class ResponseBody {
 
 	private String errorCode;
@@ -16,14 +21,6 @@ public class ResponseBody {
 	@JsonProperty("error-arg")
 	public String getErrorArg() {
 		return errorArg;
-	}
-	
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
-
-	public void setErrorArg(String errorArg) {
-		this.errorArg = errorArg;
 	}
 	
 }
