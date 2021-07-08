@@ -55,7 +55,15 @@ public class PlayerController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getMyProfile(@PathVariable("id") String id) {
-		Player player = playerService.findByIdPLayer(id);
+		Player player;
+	
+		try {
+			
+			player = playerService.findByIdPLayer(id);
+			
+		} catch (IllegalArgumentException exc) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		
 		if (player == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

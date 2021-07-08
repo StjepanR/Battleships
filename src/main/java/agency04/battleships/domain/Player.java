@@ -27,16 +27,16 @@ public class Player {
 	private String idPLayer;
 	
 	/*
-	 * Email of player
-	*/
-	@NotNull
-	private String email;
-	
-	/*
 	 * Name of the player
 	*/
 	@NotNull
 	private String name;
+	
+	/*
+	 * Email of player
+	*/
+	@NotNull
+	private String email;
 	
 	/*
 	 * Shots i fired on enemies board
