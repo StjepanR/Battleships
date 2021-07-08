@@ -1,4 +1,4 @@
-package domain.enums;
+package agency04.battleships.domain.enums;
 
 public enum Status {
 	LOST,

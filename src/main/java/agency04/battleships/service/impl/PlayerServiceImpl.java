@@ -1,26 +1,34 @@
-package service.impl;
+package agency04.battleships.service.impl;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import dao.PlayerRepository;
-import domain.Player;
-import service.PlayerService;
+import agency04.battleships.dao.PlayerRepository;
+import agency04.battleships.domain.Player;
+import agency04.battleships.domain.Players;
+import agency04.battleships.service.PlayerService;
 
+
+@Service
 public class PlayerServiceImpl implements PlayerService {
 
     private static final String EMAIL_FORMAT = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
-    private static final String ID_FORMAT = "^[1-9][0-9]*$";
+    private static final String ID_FORMAT = "^player-[1-9][0-9]*$";
     
 	@Autowired
 	private PlayerRepository playerRepository;
 	
 	@Override
-	public List<Player> listAll() {
-		return playerRepository.findAll();
+	public Players listAll() {
+		Players players = new Players();
+		players.setPlayers(playerRepository.findAll());
+		
+		return players;
 	}
 	
 	@Override
@@ -42,7 +50,7 @@ public class PlayerServiceImpl implements PlayerService {
 	}
 	
 	@Override
-	public Player findByIdPLayer(Long idPlayer) {
+	public Player findByIdPLayer(String idPlayer) {
 		Assert.notNull(idPlayer, "Player ID must be given!");
 		Assert.isTrue(idPlayer.toString().matches(ID_FORMAT), "Player ID must be a digit greater than 0, not '" + idPlayer + "'!");
 

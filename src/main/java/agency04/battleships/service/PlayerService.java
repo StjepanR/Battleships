@@ -1,19 +1,17 @@
-package service;
+package agency04.battleships.service;
 
-import java.util.List;
 
-import org.springframework.stereotype.Service;
+import agency04.battleships.domain.Player;
+import agency04.battleships.domain.Players;
 
-import domain.Player;
 
-@Service
 public interface PlayerService {
 	
-	List<Player> listAll();
+	Players listAll();
 	
 	Player createPlayer(Player player);
 	
-	Player findByIdPLayer(Long idPlayer);
+	Player findByIdPLayer(String id);
 
 	Player findByEmail(String email);
 	

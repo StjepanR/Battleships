@@ -1,4 +1,4 @@
-package service.impl;
+package agency04.battleships.service.impl;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;

@@ -1,12 +1,8 @@
-package service;
+package agency04.battleships.service;
 
 import java.util.List;
+import agency04.battleships.domain.Game;
 
-import org.springframework.stereotype.Service;
-
-import domain.Game;
-
-@Service
 public interface GameService {
 
 	List<Game> listAll();

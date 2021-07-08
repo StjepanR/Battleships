@@ -1,6 +1,7 @@
-package rest;
+package agency04.battleships.rest;
 
 import java.util.HashMap;
+
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import domain.Player;
-import domain.ResponseBody;
-import service.PlayerService;
+import agency04.battleships.domain.Player;
+import agency04.battleships.domain.ResponseBody;
+import agency04.battleships.service.PlayerService;
+import agency04.battleships.service.impl.RequestDeniedException;
 
 @RestController
 @RequestMapping("/player")
@@ -29,17 +31,19 @@ public class PlayerController {
 	@PostMapping("")
 	public ResponseEntity<?> addPlayer(@RequestBody Player player) {
 		
-		Player newPlayer = playerService.createPlayer(player);
-		/*
-		 * createPlayer returns player hence if player is null means he is not created
-		 * */
-		if (newPlayer == null) {
+		Player newPlayer;
+		
+		try {
+			
+			newPlayer = playerService.createPlayer(player);
+
+		} catch(RequestDeniedException exc) {
 			
 			ResponseBody responseBody = new ResponseBody();
 			responseBody.setErrorArg("error.username-already-taken");
 			responseBody.setErrorCode(player.getEmail());
 			
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
 		}
 		
 		Map<String, String> responseHeader = new HashMap<>();
@@ -50,7 +54,7 @@ public class PlayerController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getMyProfile(@PathVariable("id") Long id) {
+	public ResponseEntity<?> getMyProfile(@PathVariable("id") String id) {
 		Player player = playerService.findByIdPLayer(id);
 		
 		if (player == null) {
@@ -66,7 +70,7 @@ public class PlayerController {
 	}
 	
 	@PostMapping("/{id}/game")
-	public ResponseEntity<?> getOpponent(@PathVariable("id") Long id) {
+	public ResponseEntity<?> getOpponent(@PathVariable("id") String id) {
 		
 		if (playerService.findByIdPLayer(id) == null) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT); 

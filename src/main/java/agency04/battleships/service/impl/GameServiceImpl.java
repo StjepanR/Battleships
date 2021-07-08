@@ -1,16 +1,19 @@
-package service.impl;
+package agency04.battleships.service.impl;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import dao.GameRepository;
-import domain.Game;
-import domain.Player;
-import service.GameService;
-import service.PlayerService;
+import agency04.battleships.dao.GameRepository;
+import agency04.battleships.domain.Game;
+import agency04.battleships.domain.Player;
+import agency04.battleships.service.GameService;
+import agency04.battleships.service.PlayerService;
 
+@Service
 public class GameServiceImpl implements GameService {
 
 	private static final String ID_FORMAT = "^[1-9][0-9]*$";
