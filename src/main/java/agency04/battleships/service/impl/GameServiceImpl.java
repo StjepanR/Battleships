@@ -1,7 +1,7 @@
 package agency04.battleships.service.impl;
 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import agency04.battleships.service.PlayerService;
 @Service
 public class GameServiceImpl implements GameService {
 
-	private static final String ID_FORMAT = "^[1-9][0-9]*$";
+	private static final String ID_FORMAT = "^game[1-9][0-9]*$";
 	
 	@Autowired
 	private GameRepository gameRepository;
@@ -48,11 +48,31 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	@Override
-	public Game findByIdGame(Long idGame) {
+	public Game createGame(String idPlayer1, String idPlayer2) {
+		Assert.notNull(idPlayer1, "Player1 ID must be given!");
+		Assert.notNull(idPlayer2, "Player2 ID must be given!");
+		
+		Game game = new Game();
+		
+		Player player1 = playerService.findByIdPLayer(idPlayer1); //or throw
+		game.setPlayer1(player1);
+		
+		Player player2 = playerService.findByIdPLayer(idPlayer2);
+		game.setPlayer2(player2);
+		
+		game.setTurn(idPlayer1);
+		game.setStarting(idPlayer1);
+		
+		return gameRepository.save(game);
+	}
+	
+	@Override
+	public Game findByIdGame(String idGame) {
 		Assert.notNull(idGame, "Game ID must be given!");
-		Assert.isTrue(idGame.toString().matches(ID_FORMAT), "Game ID must be a digit greater than 0, not '" + idGame + "'!");
+		Assert.isTrue(idGame.matches(ID_FORMAT), "Game ID in wrong format, '" + idGame + " is wrong'!");
 
 		return gameRepository.findByIdGame(idGame);
 		
 	}
+
 }

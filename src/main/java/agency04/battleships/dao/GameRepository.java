@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import agency04.battleships.domain.Game;
 
 
-public interface GameRepository extends JpaRepository<Game, Long> {
+public interface GameRepository extends JpaRepository<Game, String> {
 
-	Game findByIdGame(Long idGame);
+	Game findByIdGame(String idGame);
 }

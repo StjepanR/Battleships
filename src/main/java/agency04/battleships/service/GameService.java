@@ -9,5 +9,7 @@ public interface GameService {
 	
 	Game createGame(Game game);
 	
-	Game findByIdGame(Long idGame);
+	Game createGame(String idPlayer1, String idPlayer2);
+	
+	Game findByIdGame(String idGame);
 }
