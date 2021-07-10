@@ -1,5 +1,8 @@
 package agency04.battleships.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Status {
 	LOST,
 	WON,
@@ -7,12 +10,4 @@ public enum Status {
 
 	private String status;
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
 }

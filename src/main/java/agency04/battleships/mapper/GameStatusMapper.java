@@ -3,9 +3,9 @@ package agency04.battleships.mapper;
 import org.springframework.stereotype.Component;
 
 import agency04.battleships.domain.Game;
-import agency04.battleships.domain.GameTurn;
-import agency04.battleships.domain.PlayerBoardStatus;
 import agency04.battleships.dto.GameStatusDTO;
+import agency04.battleships.dto.GameTurn;
+import agency04.battleships.dto.PlayerBoardStatus;
 
 @Component
 public class GameStatusMapper {

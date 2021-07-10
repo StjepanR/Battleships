@@ -60,8 +60,7 @@ public class GameServiceImpl implements GameService {
 		Player player2 = playerService.findByIdPLayer(idPlayer2);
 		game.setPlayer2(player2);
 		
-		game.setTurn(idPlayer1);
-		game.setStarting(idPlayer1);
+		
 		
 		return gameRepository.save(game);
 	}

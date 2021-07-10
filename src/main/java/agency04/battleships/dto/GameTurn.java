@@ -1,4 +1,4 @@
-package agency04.battleships.domain;
+package agency04.battleships.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

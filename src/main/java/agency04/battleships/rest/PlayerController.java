@@ -38,19 +38,14 @@ public class PlayerController {
 	private GameService gameService;
 	
 	@Autowired
-	private GameRepository gameRepository;
-	
-	@Autowired
 	private GameMapper gameMapper;
 
 	@PostMapping("")
 	public ResponseEntity<?> addPlayer(@RequestBody Player player) {
 		
-		Player newPlayer;
-		
 		try {
 			
-			newPlayer = playerService.createPlayer(player);
+			playerService.createPlayer(player);
 
 		} catch(RequestDeniedException exc) {
 			
