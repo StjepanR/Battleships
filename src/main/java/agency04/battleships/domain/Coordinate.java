@@ -1,10 +1,14 @@
 package agency04.battleships.domain;
 
+import javax.persistence.Embeddable;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor
+@Embeddable
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 public class Coordinate {
 
 	int x;

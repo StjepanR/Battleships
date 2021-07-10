@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,12 +22,16 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import agency04.battleships.converter.JPAConverterJSON;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Entity
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 public class Game {
 
 	@Id
@@ -51,20 +58,24 @@ public class Game {
 
 	@NotNull
 	private String turn;
-	
-	@NotNull
+
+	@ElementCollection
+	@JsonProperty("ships1")
 	private List<Ship> ships1;
 	
-	@NotNull
+	@ElementCollection
+	@JsonProperty("ships2")
 	private List<Ship> ships2;
 	
-	public Game() {
+	public Game(Player player1, Player player2) {
 		this.board1 = new String[10];
 		Arrays.fill(this.board1, "..........");
 
 		this.board2 = new String[10];
 		Arrays.fill(this.board2, "..........");
 		
+		this.player1 = player1;
+		this.player2 = player2;
 		this.ships1 = placeShips();
 		this.ships2 = placeShips();
 		this.starting = player1.getIdPLayer();
@@ -95,20 +106,20 @@ public class Game {
 		}
 
 		for (Ship ship : ships) {
-			ship.setCoordinates(findFreeCoordonate(coordinates, ship.getSize()));
+			List<Coordinate> shipCoordinates = findFreeCoordonate(coordinates, ship.getSize());
+			coordinates.removeAll(shipCoordinates);
+			ship.setCoordinates(shipCoordinates);
 		}
 
 		return ships;
 	}
 
-	public Set<Coordinate> findFreeCoordonate(Set<Coordinate> coordinates, int size) {
+	public List<Coordinate> findFreeCoordonate(Set<Coordinate> coordinates, int size) {
 		Random random = new Random();
-		Set<Coordinate> shipCoordinates = new HashSet<>();
+		List<Coordinate> shipCoordinates = new ArrayList<>();
 		Coordinate coordinate = new Coordinate();
 
 		boolean foundFit = true;
-		
-		Coordinate pom = new Coordinate();
 		
 		while (true) {
 			coordinate.setX(random.nextInt(10));
@@ -117,8 +128,7 @@ public class Game {
 			if (coordinates.contains(coordinate)) { // starting coordinate is free
 				if (size <= coordinate.getX() + 1) { // check if we can fit boat left
 					for (int i = 1; i <= size; i++) {
-						pom.setX(coordinate.getX() - i);
-						pom.setY(coordinate.getY());
+						Coordinate pom = new Coordinate(coordinate.getX() - i, coordinate.getY());
 						shipCoordinates.add(pom);
 						if (!coordinates.contains(pom)) { // coordinate is used
 							foundFit = false;
@@ -132,8 +142,7 @@ public class Game {
 					foundFit = true;
 				} else if (size <= coordinate.getY() + 1) { // check if we can fit boat up
 					for (int i = 1; i <= size; i++) {
-						pom.setX(coordinate.getX());
-						pom.setY(coordinate.getY() - i);
+						Coordinate pom = new Coordinate(coordinate.getX(), coordinate.getY() - i);
 						shipCoordinates.add(pom);
 						if (!coordinates.contains(pom)) { // coordinate is used
 							foundFit = false;
@@ -147,8 +156,7 @@ public class Game {
 					foundFit = true;
 				} else if (coordinate.getX() + size - 1 <= 9) { // check if we can fit boat right
 					for (int i = 1; i <= size; i++) {
-						pom.setX(coordinate.getX() + i);
-						pom.setY(coordinate.getY());
+						Coordinate pom = new Coordinate(coordinate.getX() + i, coordinate.getY());
 						shipCoordinates.add(pom);
 						if (!coordinates.contains(pom)) { // coordinate is used
 							foundFit = false;
@@ -162,8 +170,7 @@ public class Game {
 					foundFit = true;
 				} else if (coordinate.getY() + size - 1 <= 9) { // check if we can fit boat down
 					for (int i = 1; i <= size; i++) {
-						pom.setX(coordinate.getX());
-						pom.setY(coordinate.getY() + i);
+						Coordinate pom = new Coordinate(coordinate.getX(), coordinate.getY() + i);
 						shipCoordinates.add(pom);
 						if (!coordinates.contains(pom)) { // coordinate is used
 							foundFit = false;

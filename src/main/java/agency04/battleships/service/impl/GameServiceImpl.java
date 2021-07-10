@@ -52,15 +52,12 @@ public class GameServiceImpl implements GameService {
 		Assert.notNull(idPlayer1, "Player1 ID must be given!");
 		Assert.notNull(idPlayer2, "Player2 ID must be given!");
 		
-		Game game = new Game();
+		
 		
 		Player player1 = playerService.findByIdPLayer(idPlayer1); //or throw
-		game.setPlayer1(player1);
-		
 		Player player2 = playerService.findByIdPLayer(idPlayer2);
-		game.setPlayer2(player2);
 		
-		
+		Game game = new Game(player1, player2);
 		
 		return gameRepository.save(game);
 	}
