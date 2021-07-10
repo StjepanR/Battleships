@@ -2,14 +2,13 @@ package agency04.battleships.domain;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,7 +23,6 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import agency04.battleships.converter.JPAConverterJSON;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,21 +38,21 @@ public class Game {
 	private String idGame;
 
 	@ManyToOne
-	@JoinColumn(name = "idPlayer1", nullable = false)
+	@JoinColumn(name = "player1", nullable = false)
 	private Player player1;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idPlayer2", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "player2", nullable = false)
 	private Player player2;
 
 	@NotNull
 	private String starting;
 
 	@NotNull
-	private String[] board1;
+	private List<String> board1;
 
 	@NotNull
-	private String[] board2;
+	private List<String> board2;
 
 	@NotNull
 	private String turn;
@@ -68,12 +66,8 @@ public class Game {
 	private List<Ship> ships2;
 	
 	public Game(Player player1, Player player2) {
-		this.board1 = new String[10];
-		Arrays.fill(this.board1, "..........");
-
-		this.board2 = new String[10];
-		Arrays.fill(this.board2, "..........");
-		
+		this.board1 = new ArrayList<>(Collections.nCopies(10, ".........."));
+		this.board2 = new ArrayList<>(Collections.nCopies(10, ".........."));
 		this.player1 = player1;
 		this.player2 = player2;
 		this.ships1 = placeShips();

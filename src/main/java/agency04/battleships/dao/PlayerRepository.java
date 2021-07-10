@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import agency04.battleships.domain.Player;
 
-public interface PlayerRepository extends JpaRepository<Player, Long>{
+public interface PlayerRepository extends JpaRepository<Player, String>{
 	
 	Player findByIdPLayer(String idPlayer);
 	
@@ -12,6 +12,8 @@ public interface PlayerRepository extends JpaRepository<Player, Long>{
 	
 	Player findByEmailNot(String email);
 	
+	int countByIdPLayer(String idPlayer);
+	
 	int countByEmail(String email);
-	 
+	
 }

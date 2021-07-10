@@ -1,17 +1,15 @@
 package agency04.battleships.mapper;
 
-import org.springframework.stereotype.Component;
-
 import agency04.battleships.domain.Game;
-import agency04.battleships.dto.GameStatusDTO;
+import agency04.battleships.dto.GameFinishedStatusDTO;
 import agency04.battleships.dto.GameTurn;
+import agency04.battleships.dto.GameWin;
 import agency04.battleships.dto.PlayerBoardStatus;
 
-@Component
-public class GameStatusMapper {
-	
-	public GameStatusDTO toDTO(Game game) {
-		GameStatusDTO gameStautsDTO = new GameStatusDTO();
+public class GameFinishedStatusMapper {
+
+	public GameFinishedStatusDTO toDTO(Game game) {
+		GameFinishedStatusDTO gameStautsDTO = new GameFinishedStatusDTO();
 		
 		PlayerBoardStatus self = new PlayerBoardStatus();
 		self.setPlayerId(game.getPlayer1().getIdPLayer());
@@ -23,9 +21,9 @@ public class GameStatusMapper {
 		self.setBoard(game.getBoard2());
 		gameStautsDTO.setOpponent(opponent);
 		
-		GameTurn turn = new GameTurn();
-		turn.setTurn(game.getTurn());
-		gameStautsDTO.setGame(turn);
+		GameWin won = new GameWin();
+		won.setWon(game.getTurn());
+		gameStautsDTO.setWon(won);
 		
 		return gameStautsDTO;
 	}

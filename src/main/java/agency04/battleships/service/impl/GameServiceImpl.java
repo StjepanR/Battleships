@@ -1,7 +1,6 @@
 package agency04.battleships.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ import agency04.battleships.service.PlayerService;
 @Service
 public class GameServiceImpl implements GameService {
 
-	private static final String ID_FORMAT = "^game[1-9][0-9]*$";
+	private static final String ID_FORMAT = "^game-[1-9][0-9]*$";
 	
 	@Autowired
 	private GameRepository gameRepository;
@@ -51,8 +50,6 @@ public class GameServiceImpl implements GameService {
 	public Game createGame(String idPlayer1, String idPlayer2) {
 		Assert.notNull(idPlayer1, "Player1 ID must be given!");
 		Assert.notNull(idPlayer2, "Player2 ID must be given!");
-		
-		
 		
 		Player player1 = playerService.findByIdPLayer(idPlayer1); //or throw
 		Player player2 = playerService.findByIdPLayer(idPlayer2);

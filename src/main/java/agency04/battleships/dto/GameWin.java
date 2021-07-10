@@ -7,15 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor
-public class GameStatusDTO {
+public class GameWin {
 
-	@JsonProperty("self")
-	private PlayerBoardStatus self;
-	
-	@JsonProperty("opponent")
-	private PlayerBoardStatus opponent;
-	
-	@JsonProperty("game")
-	private GameTurn game;
+	@JsonProperty("won")
+	private String won;
 	
 }
