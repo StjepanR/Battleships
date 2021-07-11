@@ -45,27 +45,39 @@ public class Game {
 	private Player player2;
 
 	@NotNull
+	@JsonProperty("starting")
 	private String starting;
 
 	@NotNull
+	@JsonProperty("turn")
+	private String turn;
+	
+	@NotNull
+	@ElementCollection
+	@JsonProperty("board_1_self")
 	private List<String> board1self;
 
 	@NotNull
+	@ElementCollection
+	@JsonProperty("board_2_self")
 	private List<String> board2self;
 
 	@NotNull
-	private List<String> board1opoonent;
+	@ElementCollection
+	@JsonProperty("board_1_opponent")
+	private List<String> board1opponent;
 
 	@NotNull
-	private List<String> board2opoonent;
-	
-	@NotNull
-	private String turn;
+	@ElementCollection
+	@JsonProperty("board_2_opponent")
+	private List<String> board2opponent;
 
+	@NotNull
 	@ElementCollection
 	@JsonProperty("ships1")
 	private List<Ship> ships1;
 	
+	@NotNull
 	@ElementCollection
 	@JsonProperty("ships2")
 	private List<Ship> ships2;
@@ -75,8 +87,8 @@ public class Game {
 		this.ships2 = placeShipsRandomly();
 		this.board1self = placeShipsOnBoard(this.ships1);
 		this.board2self = placeShipsOnBoard(this.ships2);
-		this.board1opoonent = new ArrayList<>(Collections.nCopies(10, ".........."));
-		this.board2opoonent = new ArrayList<>(Collections.nCopies(10, ".........."));
+		this.board1opponent = new ArrayList<>(Collections.nCopies(10, ".........."));
+		this.board2opponent = new ArrayList<>(Collections.nCopies(10, ".........."));
 		this.player1 = player1;
 		this.player2 = player2;
 		

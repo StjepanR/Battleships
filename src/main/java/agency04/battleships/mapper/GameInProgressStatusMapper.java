@@ -21,7 +21,7 @@ public class GameInProgressStatusMapper {
 		
 		PlayerBoardStatus opponent = new PlayerBoardStatus();
 		opponent.setPlayerId(game.getPlayer2().getIdPLayer());
-		opponent.setBoard(game.getBoard1opoonent());
+		opponent.setBoard(game.getBoard1opponent());
 		gameStautsDTO.setOpponent(opponent);
 		
 		GameTurn turn = new GameTurn();
@@ -41,7 +41,7 @@ public class GameInProgressStatusMapper {
 		
 		PlayerBoardStatus opponent = new PlayerBoardStatus();
 		opponent.setPlayerId(game.getPlayer2().getIdPLayer());
-		opponent.setBoard(game.getBoard2opoonent());
+		opponent.setBoard(game.getBoard2opponent());
 		gameStautsDTO.setOpponent(opponent);
 		
 		GameTurn turn = new GameTurn();

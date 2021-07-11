@@ -17,7 +17,7 @@ public class GameFinishedStatusMapper {
 		
 		PlayerBoardStatus opponent = new PlayerBoardStatus();
 		opponent.setPlayerId(game.getPlayer2().getIdPLayer());
-		opponent.setBoard(game.getBoard1opoonent());
+		opponent.setBoard(game.getBoard1opponent());
 		gameStautsDTO.setOpponent(opponent);
 		
 		GameWin won = new GameWin();
@@ -37,7 +37,7 @@ public class GameFinishedStatusMapper {
 		
 		PlayerBoardStatus opponent = new PlayerBoardStatus();
 		opponent.setPlayerId(game.getPlayer2().getIdPLayer());
-		opponent.setBoard(game.getBoard2opoonent());
+		opponent.setBoard(game.getBoard2opponent());
 		gameStautsDTO.setOpponent(opponent);
 		
 		GameWin won = new GameWin();
