@@ -28,7 +28,7 @@ import agency04.battleships.dto.SalvoDTO;
 import agency04.battleships.dto.SalvoFinishedDTO;
 import agency04.battleships.dto.SalvoInProgressDTO;
 import agency04.battleships.mapper.GameMapper;
-import agency04.battleships.restException.NoPlayerException;
+import agency04.battleships.rest.exception.NoPlayerException;
 import agency04.battleships.mapper.GameInProgressStatusMapper;
 import agency04.battleships.service.GameService;
 import agency04.battleships.service.PlayerService;

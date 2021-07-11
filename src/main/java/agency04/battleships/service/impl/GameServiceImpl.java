@@ -10,8 +10,8 @@ import agency04.battleships.dao.GameRepository;
 import agency04.battleships.dao.PlayerRepository;
 import agency04.battleships.domain.Game;
 import agency04.battleships.domain.Player;
-import agency04.battleships.restException.NoGameException;
-import agency04.battleships.restException.NoPlayerException;
+import agency04.battleships.rest.exception.NoGameException;
+import agency04.battleships.rest.exception.NoPlayerException;
 import agency04.battleships.service.GameService;
 import agency04.battleships.service.PlayerService;
 

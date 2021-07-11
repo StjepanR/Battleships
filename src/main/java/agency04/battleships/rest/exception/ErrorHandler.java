@@ -1,4 +1,4 @@
-package agency04.battleships.restException;
+package agency04.battleships.rest.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

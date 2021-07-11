@@ -7,8 +7,8 @@ import org.springframework.util.Assert;
 import agency04.battleships.dao.PlayerRepository;
 import agency04.battleships.domain.Player;
 import agency04.battleships.domain.Players;
-import agency04.battleships.restException.ExistingPlayerException;
-import agency04.battleships.restException.NoPlayerException;
+import agency04.battleships.rest.exception.ExistingPlayerException;
+import agency04.battleships.rest.exception.NoPlayerException;
 import agency04.battleships.service.PlayerService;
 
 @Service
