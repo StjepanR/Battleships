@@ -22,6 +22,7 @@ public class MyKeyGenerator implements IdentifierGenerator, Configurable {
 		String query = String.format("select %s from %s", session.getEntityPersister(obj.getClass().getName(), obj)
 				.getIdentifierPropertyName(), obj.getClass().getSimpleName());
 
+		@SuppressWarnings("unchecked")
 		Stream<String> ids = session.createQuery(query).stream();
 
         Long max = ids.map(o -> o.replace(prefix + "-", ""))

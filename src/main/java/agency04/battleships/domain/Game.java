@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -49,11 +48,17 @@ public class Game {
 	private String starting;
 
 	@NotNull
-	private List<String> board1;
+	private List<String> board1self;
 
 	@NotNull
-	private List<String> board2;
+	private List<String> board2self;
 
+	@NotNull
+	private List<String> board1opoonent;
+
+	@NotNull
+	private List<String> board2opoonent;
+	
 	@NotNull
 	private String turn;
 
@@ -66,12 +71,15 @@ public class Game {
 	private List<Ship> ships2;
 	
 	public Game(Player player1, Player player2) {
-		this.board1 = new ArrayList<>(Collections.nCopies(10, ".........."));
-		this.board2 = new ArrayList<>(Collections.nCopies(10, ".........."));
+		this.ships1 = placeShipsRandomly();
+		this.ships2 = placeShipsRandomly();
+		this.board1self = placeShipsOnBoard(this.ships1);
+		this.board2self = placeShipsOnBoard(this.ships2);
+		this.board1opoonent = new ArrayList<>(Collections.nCopies(10, ".........."));
+		this.board2opoonent = new ArrayList<>(Collections.nCopies(10, ".........."));
 		this.player1 = player1;
 		this.player2 = player2;
-		this.ships1 = placeShips();
-		this.ships2 = placeShips();
+		
 		this.starting = player1.getIdPLayer();
 		
 		Random random = new Random();
@@ -82,7 +90,7 @@ public class Game {
 	
 	}
 
-	private List<Ship> placeShips() {
+	private List<Ship> placeShipsRandomly() {
 
 		List<Ship> ships = new ArrayList<>();
 
@@ -180,5 +188,16 @@ public class Game {
 			}	
 		}
 		return shipCoordinates;
+	}
+	
+	public List<String> placeShipsOnBoard(List<Ship> ships) {
+		List<String> board = new ArrayList<>(Collections.nCopies(10, ".........."));
+		
+		for (Ship ship : ships) {
+			for (Coordinate coordinate : ship.getCoordinates()) {
+				board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "#" + board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+			}
+		}
+		return board;
 	}
 }

@@ -7,15 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import agency04.battleships.domain.Player;
-
 @RestController
 @RequestMapping("/game")
 public class GameController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getGame(@PathVariable("id") String id) {
-		Player player;
 	
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

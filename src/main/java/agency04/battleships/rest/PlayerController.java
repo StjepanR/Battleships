@@ -147,6 +147,11 @@ public class PlayerController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
-		return new ResponseEntity<>(gameStatusMapper.toDTO(game), HttpStatus.OK);
+		if (idPlayer == game.getStarting()) {
+			return new ResponseEntity<>(gameStatusMapper.toDTOSelf(game), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(gameStatusMapper.toDTOOpponent(game), HttpStatus.OK);
+		}
+		
 	}
 }
