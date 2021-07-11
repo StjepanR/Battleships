@@ -11,7 +11,6 @@ import agency04.battleships.restException.ExistingPlayerException;
 import agency04.battleships.restException.NoPlayerException;
 import agency04.battleships.service.PlayerService;
 
-
 @Service
 public class PlayerServiceImpl implements PlayerService {
 

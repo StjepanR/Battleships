@@ -7,12 +7,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor
-public class GameWin {
+public class SalvoFinishedDTO {
 
+	@JsonProperty("salvo")
+	private SalvoDTO salvo;
+	
 	@JsonProperty("won")
-	private String won;
+	private GameWin won;
 
-	public GameWin(String won) {
+	public SalvoFinishedDTO(SalvoDTO salvo, GameWin won) {
+		this.salvo = salvo;
 		this.won = won;
 	}
 }

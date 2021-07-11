@@ -26,7 +26,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(NoPlayerException.class)
-	protected ResponseEntity<?> handleNoPlayerWxception(Exception exception, WebRequest webRequest) {
+	protected ResponseEntity<?> handleNoPlayerException(Exception exception, WebRequest webRequest) {
 
 		return new ResponseEntity<>(new ResponseBody("error.unknown-user-id", exception.getMessage()), HttpStatus.NOT_FOUND);
 	}

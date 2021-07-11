@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,25 +19,36 @@ import agency04.battleships.dao.GameRepository;
 import agency04.battleships.dao.PlayerRepository;
 import agency04.battleships.domain.Game;
 import agency04.battleships.domain.Player;
+import agency04.battleships.domain.Salvo;
+import agency04.battleships.domain.enums.Status;
 import agency04.battleships.dto.GameListDTO;
+import agency04.battleships.dto.GameTurn;
+import agency04.battleships.dto.GameWin;
+import agency04.battleships.dto.SalvoDTO;
+import agency04.battleships.dto.SalvoFinishedDTO;
+import agency04.battleships.dto.SalvoInProgressDTO;
 import agency04.battleships.mapper.GameMapper;
 import agency04.battleships.restException.NoPlayerException;
 import agency04.battleships.mapper.GameInProgressStatusMapper;
 import agency04.battleships.service.GameService;
 import agency04.battleships.service.PlayerService;
+import agency04.battleships.service.SalvoService;
 
 @RestController
 @RequestMapping("/player")
 public class PlayerController {
 	
 	@Autowired
-	private PlayerService playerService;
-	
-	@Autowired
 	private PlayerRepository playerRepository;
 	
 	@Autowired
+	private PlayerService playerService;
+	
+	@Autowired
 	private GameService gameService;
+	
+	@Autowired
+	private SalvoService salvoService;
 	
 	@Autowired
 	private GameMapper gameMapper;
@@ -110,5 +122,29 @@ public class PlayerController {
 		}
 		
 		return new ResponseEntity<>(games, HttpStatus.OK);
+	}
+	
+	@PutMapping("/{player_id}/game/{game_id}")
+	public ResponseEntity<?> getGameStatus(@PathVariable("player_id") String idPlayer, @PathVariable("game_id") String idGame, @RequestBody Salvo salvo) {
+		
+		Game game = gameService.findByIdGame(idGame);
+		Player player = playerService.findByIdPlayer(idPlayer);
+		
+		if (!game.getTurn().equals(idPlayer)) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+		
+		if (game.getStatus().equals(Status.LOST) || game.getStatus().equals(Status.WON)) {
+			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+		}
+		
+		// sets up turn and sets up status (if needed)
+		SalvoDTO salvoDTO = salvoService.fireSalvo(game, player, salvo);
+		
+		if (game.getStatus().equals(Status.IN_PROGRES)) {
+			return new ResponseEntity<>(new SalvoInProgressDTO(salvoDTO, new GameTurn(game.getTurn())), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new SalvoFinishedDTO(salvoDTO, new GameWin(idPlayer)), HttpStatus.OK);
+		}
 	}
 }

@@ -11,4 +11,8 @@ public class GameTurn {
 
 	@JsonProperty("player_turn")
 	private String turn;
+
+	public GameTurn(String turn) {
+		this.turn = turn;	
+	}
 }
