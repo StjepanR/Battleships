@@ -37,6 +37,12 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(new ResponseBody("error.username-already-taken", exception.getMessage()), HttpStatus.CONFLICT);
 	}
 
+	@ExceptionHandler(IllegalArgumentException.class)
+	protected ResponseEntity<?> handleIllegalArgumentException(Exception exception, WebRequest webRequest) {
+
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 		final Map<String, String> errors = ex.getBindingResult().getAllErrors().stream()
