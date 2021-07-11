@@ -11,12 +11,12 @@ public class GameFinishedStatusMapper {
 		GameFinishedStatusDTO gameStautsDTO = new GameFinishedStatusDTO();
 		
 		PlayerBoardStatus self = new PlayerBoardStatus();
-		self.setPlayerId(game.getPlayer1().getIdPLayer());
+		self.setPlayerId(game.getPlayer1().getIdPlayer());
 		self.setBoard(game.getBoard1self());
 		gameStautsDTO.setSelf(self);
 		
 		PlayerBoardStatus opponent = new PlayerBoardStatus();
-		opponent.setPlayerId(game.getPlayer2().getIdPLayer());
+		opponent.setPlayerId(game.getPlayer2().getIdPlayer());
 		opponent.setBoard(game.getBoard1opponent());
 		gameStautsDTO.setOpponent(opponent);
 		
@@ -31,12 +31,12 @@ public class GameFinishedStatusMapper {
 		GameFinishedStatusDTO gameStautsDTO = new GameFinishedStatusDTO();
 		
 		PlayerBoardStatus self = new PlayerBoardStatus();
-		self.setPlayerId(game.getPlayer1().getIdPLayer());
+		self.setPlayerId(game.getPlayer1().getIdPlayer());
 		self.setBoard(game.getBoard2self());
 		gameStautsDTO.setSelf(self);
 		
 		PlayerBoardStatus opponent = new PlayerBoardStatus();
-		opponent.setPlayerId(game.getPlayer2().getIdPLayer());
+		opponent.setPlayerId(game.getPlayer2().getIdPlayer());
 		opponent.setBoard(game.getBoard2opponent());
 		gameStautsDTO.setOpponent(opponent);
 		

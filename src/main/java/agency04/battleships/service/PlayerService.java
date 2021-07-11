@@ -11,7 +11,7 @@ public interface PlayerService {
 	
 	Player createPlayer(Player player);
 	
-	Player findByIdPLayer(String id);
+	Player findByIdPlayer(String id);
 
 	Player findByEmail(String email);
 	

@@ -31,7 +31,7 @@ public class Player {
 	@NotNull
 	@GeneratedValue(generator = "prod-generator")
 	@GenericGenerator(name = "prod-generator", parameters = @Parameter(name = "prefix", value = "player"), strategy = "agency04.battleships.domain.generator.MyKeyGenerator")
-	private String idPLayer;
+	private String idPlayer;
 	
 	/*
 	 * Name of the player
@@ -58,14 +58,14 @@ public class Player {
 	/*
 	 * Game history
 	*/
-	@OneToMany(mappedBy = "player1", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "player1")
 	@JsonIgnore
 	private Set<Game> games1;
 	
 	/*
 	 * Game history
 	*/
-	@OneToMany(mappedBy = "player2", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "player2")
 	@JsonIgnore
 	private Set<Game> games2;
 

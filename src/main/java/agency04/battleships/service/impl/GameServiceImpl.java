@@ -15,8 +15,10 @@ import agency04.battleships.service.PlayerService;
 @Service
 public class GameServiceImpl implements GameService {
 
-	private static final String ID_FORMAT = "^game-[1-9][0-9]*$";
+	private static final String GAME_ID_FORMAT = "^game-[1-9][0-9]*$";
 	
+	private static final String PLAYER_ID_FORMAT = "^player-[1-9][0-9]*$";
+
 	@Autowired
 	private GameRepository gameRepository;
 	
@@ -51,8 +53,8 @@ public class GameServiceImpl implements GameService {
 		Assert.notNull(idPlayer1, "Player1 ID must be given!");
 		Assert.notNull(idPlayer2, "Player2 ID must be given!");
 		
-		Player player1 = playerService.findByIdPLayer(idPlayer1); //or throw
-		Player player2 = playerService.findByIdPLayer(idPlayer2);
+		Player player1 = playerService.findByIdPlayer(idPlayer1); //or throw
+		Player player2 = playerService.findByIdPlayer(idPlayer2);
 		
 		Game game = new Game(player1, player2);
 		
@@ -62,10 +64,21 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public Game findByIdGame(String idGame) {
 		Assert.notNull(idGame, "Game ID must be given!");
-		Assert.isTrue(idGame.matches(ID_FORMAT), "Game ID in wrong format, '" + idGame + " is wrong'!");
+		Assert.isTrue(idGame.matches(GAME_ID_FORMAT), "Game ID in wrong format, '" + idGame + " is wrong'!");
 
 		return gameRepository.findByIdGame(idGame);
 		
+	}
+
+	@Override
+	public List<Game> findByPlayer1IdPlayerOrPlayer2IdPlayer(String idPlayer1, String idPlayer2) {
+		Assert.notNull(idPlayer1, "Player ID must be given!");
+		Assert.isTrue(idPlayer1.toString().matches(PLAYER_ID_FORMAT), "Player ID must be a digit greater than 0, not '" + idPlayer1 + "'!");
+
+		Assert.notNull(idPlayer2, "Player ID must be given!");
+		Assert.isTrue(idPlayer2.toString().matches(PLAYER_ID_FORMAT), "Player ID must be a digit greater than 0, not '" + idPlayer2 + "'!");
+
+		return gameRepository.findByPlayer1IdPlayerOrPlayer2IdPlayer(idPlayer1, idPlayer2);
 	}
 
 }

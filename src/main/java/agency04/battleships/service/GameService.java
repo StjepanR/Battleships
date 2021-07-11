@@ -13,4 +13,6 @@ public interface GameService {
 	Game createGame(String idPlayer1, String idPlayer2);
 	
 	Game findByIdGame(String idGame);
+	
+	List<Game> findByPlayer1IdPlayerOrPlayer2IdPlayer(String idPlayer1, String idPlayer2);
 }

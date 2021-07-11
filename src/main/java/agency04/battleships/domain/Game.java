@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -22,6 +24,7 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import agency04.battleships.domain.enums.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,6 +54,11 @@ public class Game {
 	@NotNull
 	@JsonProperty("turn")
 	private String turn;
+	
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	@JsonProperty("status")
+	private Status status;
 	
 	@NotNull
 	@ElementCollection
@@ -91,14 +99,14 @@ public class Game {
 		this.board2opponent = new ArrayList<>(Collections.nCopies(10, ".........."));
 		this.player1 = player1;
 		this.player2 = player2;
-		
-		this.starting = player1.getIdPLayer();
+		this.status = Status.IN_PROGRES;
+		this.starting = player1.getIdPlayer();
 		
 		Random random = new Random();
 		if (random.nextInt(2) == 0) {
-			this.turn = player1.getIdPLayer();
+			this.turn = player1.getIdPlayer();
 		}
-		this.turn = player2.getIdPLayer();
+		this.turn = player2.getIdPlayer();
 	
 	}
 

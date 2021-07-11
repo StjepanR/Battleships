@@ -1,5 +1,6 @@
 package agency04.battleships.rest;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import agency04.battleships.dao.PlayerRepository;
 import agency04.battleships.domain.Game;
 import agency04.battleships.domain.Player;
 import agency04.battleships.domain.ResponseBody;
+import agency04.battleships.dto.GameListDTO;
 import agency04.battleships.mapper.GameMapper;
 import agency04.battleships.mapper.GameInProgressStatusMapper;
 import agency04.battleships.service.GameService;
@@ -59,7 +61,7 @@ public class PlayerController {
 		}
 
 		HttpHeaders responseHeader = new HttpHeaders();
-	    responseHeader.set("Location", "/player/" + player.getIdPLayer());
+	    responseHeader.set("Location", "/player/" + player.getIdPlayer());
 
 		return new ResponseEntity<>(responseHeader, HttpStatus.CREATED);
 	}
@@ -70,7 +72,7 @@ public class PlayerController {
 	
 		try {
 			
-			player = playerService.findByIdPLayer(id);
+			player = playerService.findByIdPlayer(id);
 			
 		} catch (IllegalArgumentException exc) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -97,14 +99,14 @@ public class PlayerController {
 		
 		Game game;
 		
-		if (playerRepository.countByIdPLayer(idPlayer1.get("player_id")) == 0) {
+		if (playerRepository.countByIdPlayer(idPlayer1.get("player_id")) == 0) {
 			ResponseBody responseBody = new ResponseBody();
 			responseBody.setErrorCode("error.unknown-user-id");
 			responseBody.setErrorArg(idPlayer1.get("player_id").toString());
 			return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
 		}
 		
-		if (playerRepository.countByIdPLayer(idPlayer2) == 0) {
+		if (playerRepository.countByIdPlayer(idPlayer2) == 0) {
 			ResponseBody responseBody = new ResponseBody();
 			responseBody.setErrorCode("error.unknown-user-id");
 			responseBody.setErrorArg(idPlayer2);
@@ -134,7 +136,7 @@ public class PlayerController {
 			return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
 		}
 		
-		if (playerRepository.countByIdPLayer(idPlayer) == 0) {
+		if (playerRepository.countByIdPlayer(idPlayer) == 0) {
 			ResponseBody responseBody = new ResponseBody();
 			responseBody.setErrorCode("error.unknown-user-id");
 			responseBody.setErrorArg(idPlayer);
@@ -151,7 +153,25 @@ public class PlayerController {
 			return new ResponseEntity<>(gameStatusMapper.toDTOSelf(game), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(gameStatusMapper.toDTOOpponent(game), HttpStatus.OK);
+		}	
+	}
+	
+	@GetMapping("/{player_id}/game/list")
+	public ResponseEntity<?> getPlayerGames(@PathVariable("player_id") String idPlayer) {
+		
+		if (playerRepository.countByIdPlayer(idPlayer) == 0) {
+			ResponseBody responseBody = new ResponseBody();
+			responseBody.setErrorCode("error.unknown-user-id");
+			responseBody.setErrorArg(idPlayer);
+			return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
 		}
 		
+		GameListDTO games = gameMapper.toDTO(gameService.findByPlayer1IdPlayerOrPlayer2IdPlayer(idPlayer, idPlayer), idPlayer);
+		
+		if (games.getGames().size() == 0) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<>(games, HttpStatus.OK);
 	}
 }

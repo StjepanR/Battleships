@@ -47,11 +47,11 @@ public class PlayerServiceImpl implements PlayerService {
 	}
 	
 	@Override
-	public Player findByIdPLayer(String idPlayer) {
+	public Player findByIdPlayer(String idPlayer) {
 		Assert.notNull(idPlayer, "Player ID must be given!");
 		Assert.isTrue(idPlayer.toString().matches(ID_FORMAT), "Player ID must be a digit greater than 0, not '" + idPlayer + "'!");
 
-		return playerRepository.findByIdPLayer(idPlayer);
+		return playerRepository.findByIdPlayer(idPlayer);
 	}
 	
 	@Override

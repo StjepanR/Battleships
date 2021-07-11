@@ -1,8 +1,9 @@
 package agency04.battleships.domain.enums;
 
 import lombok.Getter;
+import lombok.ToString;
 
-@Getter
+@Getter @ToString
 public enum Status {
 	LOST,
 	WON,
