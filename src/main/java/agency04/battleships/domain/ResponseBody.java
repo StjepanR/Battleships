@@ -23,4 +23,8 @@ public class ResponseBody {
 		return errorArg;
 	}
 	
+	public ResponseBody(String errorCode, String errorArg) {
+		this.errorCode = errorCode;
+		this.errorArg = errorArg;
+	}
 }

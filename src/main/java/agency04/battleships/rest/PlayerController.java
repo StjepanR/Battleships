@@ -20,6 +20,9 @@ import agency04.battleships.domain.Player;
 import agency04.battleships.domain.ResponseBody;
 import agency04.battleships.dto.GameListDTO;
 import agency04.battleships.mapper.GameMapper;
+import agency04.battleships.restException.ExistingPlayerException;
+import agency04.battleships.restException.NoGameException;
+import agency04.battleships.restException.NoPlayerException;
 import agency04.battleships.mapper.GameInProgressStatusMapper;
 import agency04.battleships.service.GameService;
 import agency04.battleships.service.PlayerService;
@@ -49,15 +52,12 @@ public class PlayerController {
 
 	@PostMapping("")
 	public ResponseEntity<?> addPlayer(@RequestBody Player player) {
-		
-		try {
-			playerService.createPlayer(player);
-		} catch(RequestDeniedException exc) {
-			ResponseBody responseBody = new ResponseBody();
-			responseBody.setErrorArg("error.username-already-taken");
-			responseBody.setErrorCode(player.getEmail());
-			return new ResponseEntity<>(responseBody, HttpStatus.CONFLICT);
+
+		if (playerRepository.countByEmail(player.getEmail()) > 0) {
+			throw new ExistingPlayerException(player.getEmail());
 		}
+		
+		player = playerService.createPlayer(player);
 
 		HttpHeaders responseHeader = new HttpHeaders();
 	    responseHeader.set("Location", "/player/" + player.getIdPlayer());
@@ -66,22 +66,13 @@ public class PlayerController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getMyProfile(@PathVariable("id") String id) {
-		Player player;
+	public ResponseEntity<?> getMyProfile(@PathVariable("id") String idPlayer) {
 	
-		try {
-			
-			player = playerService.findByIdPlayer(id);
-			
-		} catch (IllegalArgumentException exc) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		if (playerRepository.countByIdPlayer(idPlayer) == 0) {
+			throw new NoPlayerException(idPlayer);
 		}
 		
-		if (player == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
-		return new ResponseEntity<>(player, HttpStatus.OK);
+		return new ResponseEntity<>(playerRepository.findByIdPlayer(idPlayer), HttpStatus.OK);
 	}
 	
 	@GetMapping("/list")
@@ -99,17 +90,11 @@ public class PlayerController {
 		Game game;
 		
 		if (playerRepository.countByIdPlayer(idPlayer1.get("player_id")) == 0) {
-			ResponseBody responseBody = new ResponseBody();
-			responseBody.setErrorCode("error.unknown-user-id");
-			responseBody.setErrorArg(idPlayer1.get("player_id").toString());
-			return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+			throw new NoPlayerException(idPlayer1.get("player_id"));
 		}
 		
 		if (playerRepository.countByIdPlayer(idPlayer2) == 0) {
-			ResponseBody responseBody = new ResponseBody();
-			responseBody.setErrorCode("error.unknown-user-id");
-			responseBody.setErrorArg(idPlayer2);
-			return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+			throw new NoPlayerException(idPlayer2);
 		}
 		
 		try {
@@ -129,17 +114,11 @@ public class PlayerController {
 		Game game;
 		
 		if (gameRepository.countByIdGame(idGame) == 0) {
-			ResponseBody responseBody = new ResponseBody();
-			responseBody.setErrorCode("error.unknown-game-id");
-			responseBody.setErrorArg(idGame);
-			return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+			throw new NoGameException(idGame);
 		}
 		
 		if (playerRepository.countByIdPlayer(idPlayer) == 0) {
-			ResponseBody responseBody = new ResponseBody();
-			responseBody.setErrorCode("error.unknown-user-id");
-			responseBody.setErrorArg(idPlayer);
-			return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+			throw new NoPlayerException(idPlayer);
 		}
 		
 		try {
@@ -159,10 +138,7 @@ public class PlayerController {
 	public ResponseEntity<?> getPlayerGames(@PathVariable("player_id") String idPlayer) {
 		
 		if (playerRepository.countByIdPlayer(idPlayer) == 0) {
-			ResponseBody responseBody = new ResponseBody();
-			responseBody.setErrorCode("error.unknown-user-id");
-			responseBody.setErrorArg(idPlayer);
-			return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+			throw new NoPlayerException(idPlayer);
 		}
 		
 		GameListDTO games = gameMapper.toDTO(gameService.findByPlayer1IdPlayerOrPlayer2IdPlayer(idPlayer, idPlayer), idPlayer);
