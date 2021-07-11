@@ -8,8 +8,6 @@ public interface GameService {
 
 	List<Game> listAll();
 	
-	Game createGame(Game game);
-	
 	Game createGame(String idPlayer1, String idPlayer2);
 	
 	Game findByIdGame(String idGame);

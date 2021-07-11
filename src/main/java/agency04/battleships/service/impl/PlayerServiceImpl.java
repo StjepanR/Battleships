@@ -7,6 +7,8 @@ import org.springframework.util.Assert;
 import agency04.battleships.dao.PlayerRepository;
 import agency04.battleships.domain.Player;
 import agency04.battleships.domain.Players;
+import agency04.battleships.restException.ExistingPlayerException;
+import agency04.battleships.restException.NoPlayerException;
 import agency04.battleships.service.PlayerService;
 
 
@@ -38,11 +40,11 @@ public class PlayerServiceImpl implements PlayerService {
 		String email = player.getEmail();
 		Assert.notNull(email, "Player email must be given!");
         Assert.isTrue(email.matches(EMAIL_FORMAT), "Given email is in wrong format: '" + email + "'!");
-
-        if(playerRepository.countByEmail(email) > 0 ) {
-            throw new RequestDeniedException("Player with email " + email + "already exists!");
-        }
-				
+        
+        if (playerRepository.countByEmail(player.getEmail()) > 0) {
+			throw new ExistingPlayerException(player.getEmail());
+		}
+        
 		return playerRepository.save(player);
 	}
 	
@@ -51,6 +53,10 @@ public class PlayerServiceImpl implements PlayerService {
 		Assert.notNull(idPlayer, "Player ID must be given!");
 		Assert.isTrue(idPlayer.toString().matches(ID_FORMAT), "Player ID must be a digit greater than 0, not '" + idPlayer + "'!");
 
+		if (playerRepository.countByIdPlayer(idPlayer) == 0) {
+			throw new NoPlayerException(idPlayer);
+		}
+		
 		return playerRepository.findByIdPlayer(idPlayer);
 	}
 	
