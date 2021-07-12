@@ -41,7 +41,6 @@ public class SalvoServiceImpl implements SalvoService {
 			
 			Ship hitShip = null;
 			boolean hit = false;
-			List<String> board;
 			
 			if (player.getIdPlayer().equals(game.getPlayer1().getIdPlayer())) { //player 1 is shooting
 				for (Ship ship : game.getShips2()) {
@@ -53,24 +52,16 @@ public class SalvoServiceImpl implements SalvoService {
 							hitShip = ship;
 							salvoMap.put(shot, Shot.HIT);
 						}
-						board = game.getBoard2self();
-						board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "X" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
-						game.setBoard2self(board);
-						board = game.getBoard1opponent();
-						board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "X" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
-						game.setBoard1opponent(board);
+						game.setBoard2self(adjustBoard(game.getBoard2self(), coordinate, "X"));
+						game.setBoard1opponent(adjustBoard(game.getBoard1opponent(), coordinate, "X"));
 						hit = true;
 						break;
 					}
 				}
 				if (!hit) {
 					salvoMap.put(shot, Shot.MISS);
-					board = game.getBoard2self();
-					board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "O" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
-					game.setBoard2self(board);
-					board = game.getBoard1opponent();
-					board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "O" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
-					game.setBoard1opponent(board);
+					game.setBoard2self(adjustBoard(game.getBoard2self(), coordinate, "O"));
+					game.setBoard1opponent(adjustBoard(game.getBoard1opponent(), coordinate, "O"));
 				} else {
 					if (salvoMap.get(shot).equals(Shot.KILL)) {
 						List<Ship> ships = game.getShips2();
@@ -78,7 +69,7 @@ public class SalvoServiceImpl implements SalvoService {
 						game.setShips2(ships);
 					} else {
 						List<Coordinate> coordinates = hitShip.getCoordinates();
-						coordinates.remove(coordinate);
+						coordinates.remove(coordinateMap);
 						hitShip.setCoordinates(coordinates);
 					}
 				}
@@ -92,24 +83,16 @@ public class SalvoServiceImpl implements SalvoService {
 							hitShip = ship;
 							salvoMap.put(shot, Shot.HIT);
 						}
-						board = game.getBoard1self();
-						board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "X" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
-						game.setBoard1self(board);
-						board = game.getBoard2opponent();
-						board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "X" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
-						game.setBoard2opponent(board);
+						game.setBoard1self(adjustBoard(game.getBoard1self(), coordinate, "X"));
+						game.setBoard2opponent(adjustBoard(game.getBoard2opponent(), coordinate, "X"));
 						hit = true;
 						break;
 					}
 				}
 				if (!hit) {
 					salvoMap.put(shot, Shot.MISS);
-					board = game.getBoard1self();
-					board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "O" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
-					game.setBoard1self(board);
-					board = game.getBoard2opponent();
-					board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "O" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
-					game.setBoard2opponent(board);
+					game.setBoard1self(adjustBoard(game.getBoard1self(), coordinate, "O"));
+					game.setBoard2opponent(adjustBoard(game.getBoard2opponent(), coordinate, "O"));
 				} else {
 					if (salvoMap.get(shot).equals(Shot.KILL)) {
 						List<Ship> ships = game.getShips1();
@@ -117,7 +100,7 @@ public class SalvoServiceImpl implements SalvoService {
 						game.setShips1(ships);
 					} else {
 						List<Coordinate> coordinates = hitShip.getCoordinates();
-						coordinates.remove(coordinate);
+						coordinates.remove(coordinateMap);
 						hitShip.setCoordinates(coordinates);
 					}
 				}
@@ -125,8 +108,6 @@ public class SalvoServiceImpl implements SalvoService {
 		}
 
 		SalvoDTO salvoDTO = new SalvoDTO(salvoMap);
-
-		gameRepository.save(game);
 		
 		// UPGRADE: Listeners for status turn and board
 		if (game.getPlayer1().getIdPlayer().equals(player.getIdPlayer())) {
@@ -141,7 +122,14 @@ public class SalvoServiceImpl implements SalvoService {
 			game.setStatus(Status.WON);
 		}
 		
+		gameRepository.save(game);
+		
 		return salvoDTO;
 	}
+	
+	public static List<String> adjustBoard(List<String> board, Coordinate coordinate, String str) {
+		board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + str +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
 
+		return board;
+	}
 }
