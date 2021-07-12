@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import agency04.battleships.dao.GameRepository;
 import agency04.battleships.dao.PlayerRepository;
 import agency04.battleships.domain.Game;
 import agency04.battleships.domain.Player;
@@ -37,110 +36,106 @@ import agency04.battleships.service.SalvoService;
 @RestController
 @RequestMapping("/player")
 public class PlayerController {
-	
+
 	@Autowired
 	private PlayerRepository playerRepository;
-	
+
 	@Autowired
 	private PlayerService playerService;
-	
+
 	@Autowired
 	private GameService gameService;
-	
+
 	@Autowired
 	private SalvoService salvoService;
-	
+
 	@Autowired
 	private GameMapper gameMapper;
-	
+
 	@Autowired
 	private GameInProgressStatusMapper gameStatusMapper;
 
 	@PostMapping("")
 	public ResponseEntity<?> addPlayer(@RequestBody Player player) {
-		
+
 		player = playerService.createPlayer(player);
 
 		HttpHeaders responseHeader = new HttpHeaders();
-	    responseHeader.set("Location", "/player/" + player.getIdPlayer());
+		responseHeader.set("Location", "/player/" + player.getIdPlayer());
 
 		return new ResponseEntity<>(responseHeader, HttpStatus.CREATED);
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getMyProfile(@PathVariable("id") String idPlayer) {
-		
+
 		return new ResponseEntity<>(playerRepository.findByIdPlayer(idPlayer), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/list")
 	public ResponseEntity<?> getPlayers() {
 		return new ResponseEntity<>(playerService.listAll(), HttpStatus.OK);
 	}
-	
+
 	/*
 	 * PathVariable id represents opponents player ID
 	 * RequestBody id represents starting player ID - me as a game player
 	 * */
 	@PostMapping("/{id}/game")
 	public ResponseEntity<?> getOpponent(@RequestBody Map<String, String> idPlayer1, @PathVariable("id") String idPlayer2) {
-		
-		 Game game = gameService.createGame(idPlayer1.get("player_id").toString(), idPlayer2);
-		
-		HttpHeaders responseHeader = new HttpHeaders();
-	    responseHeader.set("Location", "/game/" + game.getIdGame());
 
-	    return new ResponseEntity<>(gameMapper.toDTO(game), responseHeader, HttpStatus.CREATED);
+		Game game = gameService.createGame(idPlayer1.get("player_id").toString(), idPlayer2);
+
+		HttpHeaders responseHeader = new HttpHeaders();
+		responseHeader.set("Location", "/game/" + game.getIdGame());
+
+		return new ResponseEntity<>(gameMapper.toDTO(game), responseHeader, HttpStatus.CREATED);
 	}
-	
+
 	/*
 	 * Check if game belongs to player
 	 * */
 	@GetMapping("/{player_id}/game/{game_id}")
 	public ResponseEntity<?> getGameStatus(@PathVariable("player_id") String idPlayer, @PathVariable("game_id") String idGame) {
-		
+
 		if (playerRepository.countByIdPlayer(idPlayer) == 0) {
 			throw new NoPlayerException(idPlayer);
 		}
 
 		Game game = gameService.findByIdGame(idGame);
-		
-		if (idPlayer.equals(game.getStarting())) {
-			return new ResponseEntity<>(gameStatusMapper.toDTOSelf(game), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(gameStatusMapper.toDTOOpponent(game), HttpStatus.OK);
-		}	
+
+		return new ResponseEntity<>(gameStatusMapper.toDTO(game, idPlayer), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{player_id}/game/list")
 	public ResponseEntity<?> getPlayerGames(@PathVariable("player_id") String idPlayer) {
-		
+
 		GameListDTO games = gameMapper.toDTO(gameService.findByPlayer1IdPlayerOrPlayer2IdPlayer(idPlayer, idPlayer), idPlayer);
-		
+
 		if (games.getGames().size() == 0) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		
+
 		return new ResponseEntity<>(games, HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/{player_id}/game/{game_id}")
 	public ResponseEntity<?> getGameStatus(@PathVariable("player_id") String idPlayer, @PathVariable("game_id") String idGame, @RequestBody Salvo salvo) {
-		
+
 		Game game = gameService.findByIdGame(idGame);
 		Player player = playerService.findByIdPlayer(idPlayer);
-		
+
 		if (!game.getTurn().equals(idPlayer)) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
-		
+
 		if (game.getStatus().equals(Status.LOST) || game.getStatus().equals(Status.WON)) {
 			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 		}
-		
+
 		// sets up turn and sets up status (if needed)
 		SalvoDTO salvoDTO = salvoService.fireSalvo(game, player, salvo);
-		
+
 		if (game.getStatus().equals(Status.IN_PROGRES)) {
 			return new ResponseEntity<>(new SalvoInProgressDTO(salvoDTO, new GameTurn(game.getTurn())), HttpStatus.OK);
 		} else {

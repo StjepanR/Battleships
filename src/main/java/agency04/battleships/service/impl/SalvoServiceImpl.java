@@ -5,8 +5,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import agency04.battleships.dao.GameRepository;
 import agency04.battleships.domain.Coordinate;
 import agency04.battleships.domain.Game;
 import agency04.battleships.domain.Player;
@@ -21,6 +23,9 @@ import agency04.battleships.service.SalvoService;
 @Service
 public class SalvoServiceImpl implements SalvoService {
 
+	@Autowired
+	private GameRepository gameRepository;
+	
 	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public SalvoDTO fireSalvo(Game game, Player player, Salvo salvo) {
@@ -36,7 +41,7 @@ public class SalvoServiceImpl implements SalvoService {
 			
 			Ship hitShip = null;
 			boolean hit = false;
-			// adjust board
+			List<String> board;
 			
 			if (player.getIdPlayer().equals(game.getPlayer1().getIdPlayer())) { //player 1 is shooting
 				for (Ship ship : game.getShips2()) {
@@ -48,6 +53,12 @@ public class SalvoServiceImpl implements SalvoService {
 							hitShip = ship;
 							salvoMap.put(shot, Shot.HIT);
 						}
+						board = game.getBoard2self();
+						board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "X" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+						game.setBoard2self(board);
+						board = game.getBoard1opponent();
+						board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "X" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+						game.setBoard1opponent(board);
 						hit = true;
 						break;
 					}
@@ -75,6 +86,12 @@ public class SalvoServiceImpl implements SalvoService {
 							hitShip = ship;
 							salvoMap.put(shot, Shot.HIT);
 						}
+						board = game.getBoard1self();
+						board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "X" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+						game.setBoard1self(board);
+						board = game.getBoard2opponent();
+						board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "X" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+						game.setBoard2opponent(board);
 						hit = true;
 						break;
 					}
@@ -97,6 +114,8 @@ public class SalvoServiceImpl implements SalvoService {
 
 		SalvoDTO salvoDTO = new SalvoDTO(salvoMap);
 
+		gameRepository.save(game);
+		
 		// UPGRADE: Listeners for status turn and board
 		if (game.getPlayer1().getIdPlayer().equals(player.getIdPlayer())) {
 			game.setTurn(game.getPlayer2().getIdPlayer());
@@ -109,6 +128,7 @@ public class SalvoServiceImpl implements SalvoService {
 		} else if (game.getShips2().size() == 0) {
 			game.setStatus(Status.WON);
 		}
+		
 		return salvoDTO;
 	}
 
