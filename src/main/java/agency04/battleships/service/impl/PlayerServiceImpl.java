@@ -1,5 +1,7 @@
 package agency04.battleships.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -67,7 +69,7 @@ public class PlayerServiceImpl implements PlayerService {
 	}
 
 	@Override
-	public Player findByEmailNot(String email) {
+	public List<Player> findByEmailNot(String email) {
 		Assert.notNull(email, "Player email must be given!");
 		
 		return playerRepository.findByEmailNot(email);

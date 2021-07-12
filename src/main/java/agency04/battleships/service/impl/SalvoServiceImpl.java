@@ -65,6 +65,12 @@ public class SalvoServiceImpl implements SalvoService {
 				}
 				if (!hit) {
 					salvoMap.put(shot, Shot.MISS);
+					board = game.getBoard2self();
+					board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "O" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+					game.setBoard2self(board);
+					board = game.getBoard1opponent();
+					board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "O" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+					game.setBoard1opponent(board);
 				} else {
 					if (salvoMap.get(shot).equals(Shot.KILL)) {
 						List<Ship> ships = game.getShips2();
@@ -98,6 +104,12 @@ public class SalvoServiceImpl implements SalvoService {
 				}
 				if (!hit) {
 					salvoMap.put(shot, Shot.MISS);
+					board = game.getBoard1self();
+					board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "O" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+					game.setBoard1self(board);
+					board = game.getBoard2opponent();
+					board.set(coordinate.getY(), board.get(coordinate.getY()).substring(0, coordinate.getX()) + "O" +  board.get(coordinate.getY()).substring(coordinate.getX() + 1));
+					game.setBoard2opponent(board);
 				} else {
 					if (salvoMap.get(shot).equals(Shot.KILL)) {
 						List<Ship> ships = game.getShips1();
