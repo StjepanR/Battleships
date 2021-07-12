@@ -105,9 +105,10 @@ public class Game {
 		Random random = new Random();
 		if (random.nextInt(2) == 0) {
 			this.turn = player1.getIdPlayer();
+		} else {
+			this.turn = player2.getIdPlayer();
 		}
-		this.turn = player2.getIdPlayer();
-	
+		
 	}
 
 	private List<Ship> placeShipsRandomly() {
