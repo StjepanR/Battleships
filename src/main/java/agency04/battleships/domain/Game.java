@@ -29,6 +29,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Game between two players. Consists of two players, starting, 
+ * turn, status of the game, board of player1 ships, board of player2 ships,
+ * player1s view of player2s board, player2s view of player1s board,
+ * ship placements of player1, ship placements of player2, 
+ * Uniquely identified by internal system ID (a String).
+ * player1 is player who started the game (self) and the player2 is the 
+ * one who is being challenged (opponent).
+ * player1 and player2 ships are randomly placed onto board using java.util.Random
+ * 
+ * @see Player
+ * @see Ship
+ * @author Stjepan Ruklić
+ * 
+ */
 
 @Entity
 @Getter @Setter @NoArgsConstructor

@@ -6,6 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * ResponseBody is custom response with errorCode and errorArg.
+ * errorCode represents type of error.
+ * errorArg represents resource that caused error.
+ * 
+ * @author Stjepan Ruklić
+ *
+ */
 @Getter @Setter @NoArgsConstructor
 public class ResponseBody {
 

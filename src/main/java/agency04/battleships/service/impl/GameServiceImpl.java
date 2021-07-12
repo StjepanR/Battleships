@@ -39,7 +39,10 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public Game createGame(String idPlayer1, String idPlayer2) {
 		Assert.notNull(idPlayer1, "Player1 ID must be given!");
+		Assert.isTrue(idPlayer2.toString().matches(PLAYER_ID_FORMAT), "Player ID must be a digit greater than 0, not '" + idPlayer1 + "'!");
+
 		Assert.notNull(idPlayer2, "Player2 ID must be given!");
+		Assert.isTrue(idPlayer2.toString().matches(PLAYER_ID_FORMAT), "Player ID must be a digit greater than 0, not '" + idPlayer2 + "'!");
 		
 		if (playerRepository.countByIdPlayer(idPlayer1) == 0) {
 			throw new NoPlayerException(idPlayer1);

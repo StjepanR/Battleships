@@ -128,12 +128,22 @@ public class PlayerController {
 		if (!game.getTurn().equals(idPlayer)) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
+		
+		if (idPlayer.equals(game.getPlayer1().getIdPlayer())) {
+			if (salvo.getSalvo().size() > game.getShips1().size()) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+		} else {
+			if(salvo.getSalvo().size() > game.getShips2().size()) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+		}
+		
 
 		if (game.getStatus().equals(Status.LOST) || game.getStatus().equals(Status.WON)) {
 			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 		}
 
-		// sets up turn and sets up status (if needed)
 		SalvoDTO salvoDTO = salvoService.fireSalvo(game, player, salvo);
 
 		if (game.getStatus().equals(Status.IN_PROGRES)) {

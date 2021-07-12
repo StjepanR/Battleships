@@ -18,13 +18,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * An enrolled user.
+ * User is uniquely identified by internal system ID (a String)
+ * or with the email (a string of maximum 255 characters).
+ * Name and email are required.
+ * 
+ * @see Game
+ * @author Stjepan Ruklić
+ * 
+ */
+
 @Entity
 @Getter @Setter @NoArgsConstructor
 public class Player {
 
-	/*
-	 * idPLayer represents ID of player
-	*/
 	@Id
 	@JsonIgnore
 	@NotNull
@@ -32,38 +40,16 @@ public class Player {
 	@GenericGenerator(name = "prod-generator", parameters = @Parameter(name = "prefix", value = "player"), strategy = "agency04.battleships.domain.generator.MyKeyGenerator")
 	private String idPlayer;
 	
-	/*
-	 * Name of the player
-	*/
 	@NotNull
 	private String name;
 	
-	/*
-	 * Email of player
-	*/
 	@NotNull
 	private String email;
 	
-	/*
-	 * Shots i fired on enemies board
-	*/
-	//private Map<String, Shot> myShots; 
-	
-	/*
-	 * Shots enemy fired on my board
-	*/
-	//private List<String> enemyShots;
-	
-	/*
-	 * Game history
-	*/
 	@OneToMany(mappedBy = "player1")
 	@JsonIgnore
 	private Set<Game> games1;
 	
-	/*
-	 * Game history
-	*/
 	@OneToMany(mappedBy = "player2")
 	@JsonIgnore
 	private Set<Game> games2;

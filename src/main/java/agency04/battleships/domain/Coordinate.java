@@ -9,6 +9,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Coordinate represents position on board.
+ * The playing board consists of 10x10 grid, where the rows are numbered using the
+ * decimal number system (1 – 10) and the columns are marked alphabetically (A – J).
+ * 
+ * @see Ship
+ * @author Stjepan Ruklić
+ * 
+ */
+
 @Embeddable
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 public class Coordinate {
